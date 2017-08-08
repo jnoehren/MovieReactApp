@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Simple React Movie App",
+  "name": "Basic App to Learn React Using an ImDb dataset",
   "icons": [
     {
       "src": "favicon.ico",
