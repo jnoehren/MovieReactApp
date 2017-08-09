@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Calculator from './calculator';
+import MovieApp from './MovieApp'
 
 ReactDOM.render(
   <div id="wrapper">
-  	<Calculator />
+  	<MovieApp />
   </div>,
   document.getElementById('root')
 );
