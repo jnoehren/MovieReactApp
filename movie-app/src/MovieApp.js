@@ -2,25 +2,10 @@ import React from 'react';
 import './movieapp.css'
 import logo from'./imdb-logo.jpeg'
 
-class SearchBar extends React.Component{
+class MovieApp extends React.Component{
 	state={
+		browseName: "Movie",
 		value: ''
-	}
-	render(){
-		const {value} = this.state
-		return(
-			<form>
-				<label>
-					<input type="text" value={value}/>
-				</label>
-				<input className="search-button" type="submit" value="Search"/>
-			</form>
-		)
-	}
-}
-class Toggle extends React.Component{
-	state={
-		browseName: "Movie"
 	}
 	toggleBrowse(){
 		const {browseName} = this.state
@@ -34,44 +19,51 @@ class Toggle extends React.Component{
 				browseName: "Movie"
 			})
 		}
+	}	
+	browse(term){
+		console.log(term)
+	}
+	search(){
+		const searchTerm = this.refs.textInput.value
+		this.setState({
+			value: searchTerm + ' '
+		})
 	}
 	render(){
 		const {browseName} = this.state
+		const {value} = this.state
+		let toggle = null
 		if(browseName==="Movie"){
-			return(
+			toggle = (
 				<div>
 					<button className="basic-button toggle-button" onClick={()=> this.toggleBrowse()}>{browseName}</button>
-					<button className="basic-button">Year</button>
-					<button className="basic-button">Content Rating</button>
-					<button className="basic-button">Director</button>
-				</div>
-			)			
+					<button className="basic-button" onClick={()=> this.browse("year")}>Year</button>
+					<button className="basic-button" onClick={()=> this.browse("rating")}>Content Rating</button>
+					<button className="basic-button" onClick={()=> this.browse("director")}>Director</button>
+				</div>)
 		}
-		return(
-			<div>
-				<button className="basic-button toggle-button" onClick={()=> this.toggleBrowse()}>{browseName}</button>
-				<button className="basic-button">Alphabetical</button>
-				<button className="basic-button">Facebook Likes</button>
-				<button className="basic-button">Number of Movies</button>
-			</div>
-		)
-	}
-}
-
-class MovieApp extends React.Component{
-	state={
-		browseName: "Movie"
-	}
-	render(){
-		const {browseName} = this.state
+		else{
+			toggle = (
+				<div>
+					<button className="basic-button toggle-button" onClick={()=> this.toggleBrowse()}>{browseName}</button>
+					<button className="basic-button" onClick={()=> this.browse("alphabetical")}>Alphabetical</button>
+					<button className="basic-button" onClick={()=> this.browse("likes")}>Facebook Likes</button>
+					<button className="basic-button" onClick={()=> this.browse("number")}>Number of Movies</button>
+				</div>
+			)
+		}
 		return(
 			<div className="movie-app">
 				<img src={logo} className="logo" />
 				<div className="browse-toggle">
-					<Toggle />
+					{toggle}
 				</div>
 				<div className="search">
-					<SearchBar className="search-display"/>
+					<form>
+						<label>
+							<input type="search" className="search-bar" value ={value} ref="textInput" onChange={()=> this.search()}/>
+						</label>
+					</form>
 				</div>
 					{/*<DisplayResults className="display"></DisplayResults>--!>*/}
 			</div>
