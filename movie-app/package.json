@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "express": "^4.15.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.11"
+    "react-scripts": "1.0.11",
+    "body-parser": "*",
+    "mongoose" : "*"
   },
   "scripts": {
     "start": "react-scripts start",
