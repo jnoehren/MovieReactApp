@@ -54,6 +54,7 @@ class MovieApp extends React.Component{
 		let heading = null
 		let list = []
 		let navigation = null
+		let dataOne = null
 
 		if(page>0){
 			navigation=(
@@ -72,8 +73,17 @@ class MovieApp extends React.Component{
 		}
 
 		if(browseName==="Movie"){
+			fetch('http://localhost:3000/api/movies')
+			.then(response=> response.json())
+			.then(function(data){
+				document.write(data);
+			})
+			.catch(function(error){
+				document.write(error)
+			});
+
 			for(let i = page; i<page+9;i++){
-				list.push(this.props.data[i].movie_title.toString())
+				list.push(dataOne[i])
 			}	
 			heading = "Movie Title"
 			toggle = (

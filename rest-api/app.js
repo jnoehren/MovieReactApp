@@ -9,6 +9,10 @@ Actor = require('./models/actor');
 mongoose.connect('mongodb://localhost/movieinfo');
 var db = mongoose.connection;
 
+app.get('/', function(req, res){
+	console.log('default');
+})
+
 app.get('/api/movies', function(req, res){
 	Movie.getMovies(function(err, movies){
 		if(err){
