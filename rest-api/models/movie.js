@@ -9,7 +9,7 @@ var movieSchema = mongoose.Schema({
 	score: Number
 });
 
-var Movie = module.exports = mongoose.model('movie', movieSchema);
+var Movie = module.exports = mongoose.model('movie', movieSchema, 'movie');
 
 module.exports.getMovies = function(callback){
 	Movie.find(callback);

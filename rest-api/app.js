@@ -11,7 +11,7 @@ var db = mongoose.connection;
 
 app.get('/', function(req, res){
 	console.log('default');
-})
+});
 
 app.get('/api/movies', function(req, res){
 	Movie.getMovies(function(err, movies){
@@ -63,5 +63,5 @@ app.get('/api/actorsSort/:_catagory', function(req, res){
 	});
 });
 
-app.listen(3000);
+app.listen(3001);
 console.log('Running');

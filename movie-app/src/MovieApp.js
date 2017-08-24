@@ -7,17 +7,53 @@ class MovieApp extends React.Component{
 		browseName: "Movie",
 		value: '',
 		page: 0,
+		outputData: []
+	}
+	componentWillMount(){
+		this.getMovieInfo("year")
+	}
+	getMovieInfo(catagory){
+		var list = []
+		var url = '/api/moviesSort/' + catagory
+		fetch(url)
+			.then(response=> {
+				return response.json()})
+			.then(output=>{
+				for (var title in output){
+					list.push(output[title].title)
+				}
+				this.setState({
+					outputData:list
+				})
+			})
+	}
+	getActorInfo(catagory){
+		var list = []
+		var url = '/api/actorsSort/' + catagory
+		fetch(url)
+			.then(response=> {
+				return response.json()})
+			.then(output=>{
+				for (var title in output){
+					list.push(output[title].actor)
+				}
+				this.setState({
+					outputData:list
+				})
+			})		
 	}
 	toggleBrowse(){
 		const {browseName} = this.state
 		const {page} = this.state
 		if(browseName==="Movie"){
+			this.getActorInfo("name")
 			this.setState({
 				browseName: "Actor",
 				page: 0
 			})
 		}
 		else{
+			this.getMovieInfo("year")
 			this.setState({
 				browseName: "Movie",
 				page: 0
@@ -25,7 +61,26 @@ class MovieApp extends React.Component{
 		}
 	}	
 	browse(term){
-		console.log(term)
+		switch(term){
+			case "year":
+				this.getMovieInfo("year")
+				break
+			case "rating":
+				this.getMovieInfo("content_rating")
+				break
+			case "director":
+				this.getMovieInfo("director")
+				break
+			case "alphabetical":
+				this.getActorInfo("name")
+				break
+			case "likes":
+				this.getActorInfo("likes")
+				break
+			case "number":
+				this.getActorInfo("movies")
+				break
+		}
 	}
 	search(){
 		const searchTerm = this.refs.textInput.value
@@ -35,26 +90,22 @@ class MovieApp extends React.Component{
 	}
 	next(){
 		const {page} = this.state
-		this.setState({
-			page: page+10
-		})
+		this.setState({page: page+10})
 	}
 	previous(){
 		const{page} =this.state
-		this.setState({
-			page: page-10
-		})
+		this.setState({page: page-10})
 	}
 	render(){
 		const {browseName} = this.state
 		const {value} = this.state
 		const {page} = this.state
+		const {outputData} = this.state
 		let toggle = null
 		let table = null
 		let heading = null
 		let list = []
 		let navigation = null
-		let dataOne = null
 
 		if(page>0){
 			navigation=(
@@ -73,17 +124,8 @@ class MovieApp extends React.Component{
 		}
 
 		if(browseName==="Movie"){
-			fetch('http://localhost:3000/api/movies')
-			.then(response=> response.json())
-			.then(function(data){
-				document.write(data);
-			})
-			.catch(function(error){
-				document.write(error)
-			});
-
 			for(let i = page; i<page+9;i++){
-				list.push(dataOne[i])
+				list.push(outputData[i])
 			}	
 			heading = "Movie Title"
 			toggle = (
@@ -96,7 +138,7 @@ class MovieApp extends React.Component{
 		}
 		else{
 			for(let i = page; i<page+9;i++){
-				list.push(this.props.data[i].actor_1_name.toString())
+				list.push(outputData[i])
 			}
 			heading = "Actor Name"
 			toggle = (

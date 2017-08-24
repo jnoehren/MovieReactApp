@@ -6,7 +6,7 @@ var actorSchema = mongoose.Schema({
 	likes: Number
 });
 
-var Actor = module.exports = mongoose.model('actor', actorSchema);
+var Actor = module.exports = mongoose.model('actor', actorSchema, 'actor');
 
 module.exports.getActors = function(callback){
 	Actor.find(callback);
