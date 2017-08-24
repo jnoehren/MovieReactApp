@@ -7,7 +7,8 @@ class MovieApp extends React.Component{
 		browseName: "Movie",
 		value: '',
 		page: 0,
-		outputData: []
+		outputData: [],
+		searchData: []
 	}
 	componentWillMount(){
 		this.getMovieInfo("year")
@@ -85,7 +86,7 @@ class MovieApp extends React.Component{
 	search(){
 		const searchTerm = this.refs.textInput.value
 		this.setState({
-			value: searchTerm + ' '
+			value: searchTerm
 		})
 	}
 	next(){
@@ -107,6 +108,12 @@ class MovieApp extends React.Component{
 		let list = []
 		let navigation = null
 
+		let displayData = outputData.filter(
+			(name)=>{
+				return name.indexOf(value) !== -1;
+			}
+		)
+
 		if(page>0){
 			navigation=(
 				<div className="navigation">
@@ -125,7 +132,7 @@ class MovieApp extends React.Component{
 
 		if(browseName==="Movie"){
 			for(let i = page; i<page+9;i++){
-				list.push(outputData[i])
+				list.push(displayData[i])
 			}	
 			heading = "Movie Title"
 			toggle = (
@@ -138,7 +145,7 @@ class MovieApp extends React.Component{
 		}
 		else{
 			for(let i = page; i<page+9;i++){
-				list.push(outputData[i])
+				list.push(displayData[i])
 			}
 			heading = "Actor Name"
 			toggle = (
