@@ -1,6 +1,6 @@
 # IMDB React/Express App
 
-Simple React/Express app that show data from an IMDb dataset that is stored in NoSQL collections. Express is used to create a RESTful API to return the information in those collections for React to display.
+Simple React/Express app that show data from an IMDb dataset that is stored in NoSQL Mongo collections. Express is used to create a RESTful API to return the information in those collections for React to display.
 
 ## Getting Started
 
