@@ -25,7 +25,7 @@ What things you need to install the software and how to install them
   npm install nodemon
 ```
 
-### Installing
+### Installing & Set Up
 
 **1. Insert Data into Mongo Collections** 
 
