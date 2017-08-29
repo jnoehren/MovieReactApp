@@ -18,19 +18,15 @@ class DataHeader extends React.Component{
 	}
 }
 
-// Needs List and page passed as props
+// Needs List passed as props
 class DataRow extends React.Component{
 	constructor(props){
 		super(props);
 	}
 	render(){
-		var partial = []
-		for(var i = this.props.page; i<this.props.page+14; i++){
-			partial.push(this.props.list[i])
-		}
 		return(
 			<tbody>
-				{partial.map((element,iterator)=>(
+				{this.props.list.map((element,iterator)=>(
 					<div className="single-element" key={iterator}> {element} </div>
 				))}
 			</tbody>
@@ -42,6 +38,14 @@ class DataRow extends React.Component{
 class Navigation extends React.Component{
 	constructor(props){
 		super(props);
+		this.pressNext = this.pressNext.bind(this)
+		this.pressPrevious = this.pressPrevious.bind(this)
+	}
+	pressNext(e){
+		this.props.onNext(e)
+	}
+	pressPrevious(e){
+		this.props.onPrevious(e)
 	}
 	render(){
 		let navigation = null
@@ -49,15 +53,15 @@ class Navigation extends React.Component{
 		if(this.props.page>0){
 			navigation=(
 				<div className="navigation">
-					<button className="basic-button nav-button">previous</button>
-					<button className="basic-button nav-button">next</button>
+					<button className="basic-button nav-button" onClick={this.pressPrevious}>previous</button>
+					<button className="basic-button nav-button" onClick={this.pressNext}>next</button>
 				</div>
 			)
 		}
 		else{
 			navigation=(
 				<div className="navigation">
-					<button className="basic-button nav-button">next</button>
+					<button className="basic-button nav-button" onClick={this.pressNext}>next</button>
 				</div>
 			)
 		}
@@ -69,19 +73,55 @@ class Navigation extends React.Component{
 	}
 }
 
-// Needs heading, list and page as a prop
+// Needs heading, list, and  value as a prop
 class DataTable extends React.Component{
 	constructor(props){
 		super(props);
+		this.state = {
+			page: 0
+		}
 	}
+
+	next(){
+		this.setState({
+			page: this.state.page + 15
+		})
+	}
+	previous(){
+		this.setState({
+			page: this.state.page - 15
+		})
+	}
+
 	render(){
+		let filterList = this.props.list.filter(
+			(element)=>{
+				return String(element.title).indexOf(this.props.value) !== -1;
+			}
+		)
+
+		var partial = []
+		if(filterList.length == 0){
+			partial.push("No Results")
+		}
+		else if(filterList.length < 14){
+			for(var i = this.state.page; i<filterList.length-1; i++){
+				partial.push(filterList[i].title)			
+			}
+		}
+		else{
+			for(var i = this.state.page; i<this.state.page+14; i++){
+				partial.push(filterList[i].title)
+			}			
+		}
+
 		return(
 			<div className="display">
 				<table>
 					<DataHeader heading={this.props.heading}/>
-					<DataRow list={this.props.list} page={this.props.page}/>
+					<DataRow list={partial} />
 				</table>
-				<Navigation page={this.props.page}/>
+				<Navigation page={this.state.page} onNext={this.next.bind(this)} onPrevious={this.previous.bind(this)}/>
 			</div>
 		)
 	}
@@ -91,13 +131,19 @@ class DataTable extends React.Component{
 class SearchBar extends React.Component{
 	constructor(props){
 		super(props);
+		this.handleInput = this.handleInput.bind(this);
 	}
+
+	handleInput(e){
+		this.props.onInput(e.target.value)
+	}
+
 	render(){
 		return(
 			<div className="search">
 				<form>
 					<label>
-						<input type="search" className="search-bar" value ={this.props.value} ref="textInput"/>
+						<input type="search" className="search-bar" value = {this.props.value} onChange={this.handleInput} />
 					</label>
 				</form>
 			</div>
@@ -139,36 +185,36 @@ class BrowseCatagories extends React.Component{
 	}
 }
 
-// Needs heading and search value as prop
-class SortTable extends React.Component{
-	constructor(props){
-		super(props)
-	}
-	render(){
-		return(
-			<div className="SortTable">
-				<BrowseCatagories heading={this.props.heading}/>
-				<SearchBar value={this.props.value}/>
-			</div>
-		)
-	}
-}
-
 class App extends React.Component{
 	constructor(props){
 		super(props)
-		var collection = []
-		for(var element in props.data){
-			collection.push(props.data[element].title)
+		this.state = {
+			value: ""
 		}
-		this.state = {list:collection}
 	}
+
+	search(value){
+		this.setState({
+			value: value
+		});
+	}
+
 	render(){
 		return(
 			<div className="movie-app container">
 				<img src={logo} className="logo" />
-				<SortTable heading="Movie" value=""	/>
-				<DataTable heading="Movie" list={this.state.list} page={0}/>
+				<BrowseCatagories 
+					heading={this.props.heading}
+				/>
+				<SearchBar 
+					value={this.state.value} 
+					onInput={this.search.bind(this)}
+				/>
+				<DataTable 
+					heading={this.props.heading} 
+					list={this.props.data} 
+					value={this.state.value}
+				/>
 			</div>		
 		)
 	}

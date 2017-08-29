@@ -6,7 +6,7 @@ var movieData = require('./movie_table');
 
 ReactDOM.render(
   <div id="wrapper" className="movie-app container">
-  	<App data={movieData}/>
+  	<App data={movieData} heading="Movie" />
   </div>,
   document.getElementById('root')
 );
