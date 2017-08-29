@@ -1,14 +1,18 @@
 import React from 'react';
-import './movieapp.css'
-import logo from'./imdb-logo.jpeg'
+import './movieapp.css';
+import logo from'./imdb-logo.jpeg';
+
 
 class MovieApp extends React.Component{
-	state={
+	constructor(props){
+		super(props)
+		this.state = {
 		browseName: "Movie",
 		value: '',
 		page: 0,
 		outputData: [],
 		searchData: []
+		}
 	}
 	componentWillMount(){
 		this.getMovieInfo("year")

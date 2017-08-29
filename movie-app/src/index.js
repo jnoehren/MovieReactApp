@@ -1,14 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MovieApp from './MovieApp'
-var DATA = require('./movie_data.json');
+import MovieApp from './MovieApp';
+import App from './App';
+var movieData = require('./movie_table');
 
 ReactDOM.render(
-  <div id="wrapper">
-  	<MovieApp data={DATA}/>
+  <div id="wrapper" className="movie-app container">
+  	<App data={movieData}/>
   </div>,
   document.getElementById('root')
 );
+
 
 
 
