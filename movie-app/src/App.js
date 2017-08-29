@@ -105,7 +105,7 @@ class DataTable extends React.Component{
 			partial.push("No Results")
 		}
 		else if(filterList.length < 14){
-			for(var i = this.state.page; i<filterList.length-1; i++){
+			for(var i = this.state.page; i<filterList.length; i++){
 				partial.push(filterList[i].title)			
 			}
 		}
@@ -155,25 +155,31 @@ class SearchBar extends React.Component{
 class BrowseCatagories extends React.Component{
 	constructor(props){
 		super(props);
+		this.browse = this.browse.bind(this)
 	}
+
+	browse(e){
+		this.props.browseInput(e.target.value)
+	}
+
 	render(){
 		let toggle = null
 		if(this.props.heading==="Movie"){	
 			toggle = (
 				<div>
 					<button className="basic-button toggle-button" >{this.props.heading}</button>
-					<button className="basic-button" >Year</button>
-					<button className="basic-button" >Content Rating</button>
-					<button className="basic-button" >Director</button>
+					<button className="basic-button" onClick={this.browse} value="year">Year</button>
+					<button className="basic-button" onClick={this.browse} value="rating">Content Rating</button>
+					<button className="basic-button" onClick={this.browse} value="director">Director</button>
 				</div>)
 		}
 		else{
 			toggle = (
 				<div>
 					<button className="basic-button toggle-button" >{this.props.heading}</button>
-					<button className="basic-button" >Alphabetical</button>
-					<button className="basic-button" >Facebook Likes</button>
-					<button className="basic-button" >Number of Movies</button>
+					<button className="basic-button" onClick={this.browse} value="alpha">Alphabetical</button>
+					<button className="basic-button" onClick={this.browse} value="likes">Facebook Likes</button>
+					<button className="basic-button" onClick={this.browse} value="number">Number of Movies</button>
 				</div>
 			)
 		}
@@ -189,7 +195,8 @@ class App extends React.Component{
 	constructor(props){
 		super(props)
 		this.state = {
-			value: ""
+			value: "",
+			data: this.props.data
 		}
 	}
 
@@ -199,12 +206,58 @@ class App extends React.Component{
 		});
 	}
 
+	sortByKey(array, key, type) {
+		if(type=="increasing"){
+		    return array.sort(function(a, b) {
+		        var x = a[key]; var y = b[key];
+		        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+			});	
+		}
+		else{
+		    return array.sort(function(a, b) {
+		        var x = a[key]; var y = b[key];
+		        return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+		    });			
+		}
+	}
+
+	browse(category){
+		let browseList = null
+		switch (category){
+			case "year":
+				browseList = this.sortByKey(this.state.data,'year','decreasing')
+				break
+			case "rating":
+				browseList = this.sortByKey(this.state.data,'content_rating','decreasing')
+				break
+			case "director":
+				browseList = this.sortByKey(this.state.data, 'director', 'increasing')
+				break
+			case "alpha":
+				browseList = this.sortByKey(this.state.data, 'actor','increasing')
+				break
+			case "likes":
+				browseList = this.sortByKey(this.state.data, 'likes','increasing')
+				break
+			case "number":
+				browseList = this.sortByKey(this.state.data, 'movies','increasing')
+				break
+			default:
+				browseList = this.state.data
+				break
+		}
+		this.setState({
+			data: browseList
+		})
+	}
+
 	render(){
 		return(
 			<div className="movie-app container">
 				<img src={logo} className="logo" />
 				<BrowseCatagories 
 					heading={this.props.heading}
+					browseInput={this.browse.bind(this)}
 				/>
 				<SearchBar 
 					value={this.state.value} 
@@ -212,7 +265,7 @@ class App extends React.Component{
 				/>
 				<DataTable 
 					heading={this.props.heading} 
-					list={this.props.data} 
+					list={this.state.data} 
 					value={this.state.value}
 				/>
 			</div>		

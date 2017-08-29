@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MovieApp from './MovieApp';
 import App from './App';
 var movieData = require('./movie_table');
 
